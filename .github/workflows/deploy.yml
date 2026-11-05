@@ -3,9 +3,9 @@ name: Deploy website
 on:
   push:
     branches: [main]
-    paths: ['index.html', 'img/**', '.github/workflows/deploy.yml']
+    paths: ['index.html', 'img/**', 'extensions/**', '.github/workflows/deploy.yml']
   pull_request:
-    paths: ['index.html', 'img/**', '.github/workflows/deploy.yml']
+    paths: ['index.html', 'img/**', 'extensions/**', '.github/workflows/deploy.yml']
   workflow_dispatch:
     inputs:
       dry_run:
@@ -38,25 +38,35 @@ jobs:
           from urllib.parse import urlsplit
 
           root = Path('.').resolve()
-          html = (root / 'index.html').read_text()
 
+          # Checks files referenced relatively (images, stylesheets, links
+          # between pages). Root-relative links such as /vote point at other
+          # tools on the server and are not checked.
           class Assets(HTMLParser):
+              def __init__(self, page):
+                  super().__init__()
+                  self.page = page
+
               def handle_starttag(self, tag, attrs):
                   for key, value in attrs:
-                      if key not in ('src', 'srcset') or not value:
+                      if key not in ('src', 'srcset', 'href') or not value:
                           continue
                       for ref in (part.strip().split()[0] for part in value.split(',')):
                           url = urlsplit(ref)
-                          if url.scheme or url.netloc or not url.path:
+                          if url.scheme or url.netloc or not url.path or url.path.startswith('/'):
                               continue
-                          asset = (root / url.path).resolve()
-                          assert asset.is_relative_to(root) and asset.is_file(), f'Missing asset: {ref}'
+                          asset = (self.page.parent / url.path).resolve()
+                          if asset.is_dir():
+                              asset = asset / 'index.html'
+                          assert asset.is_relative_to(root) and asset.is_file(), f'{self.page}: missing {ref}'
 
-          Assets().feed(html)
-          print('Static page and referenced images verified')
+          pages = [root / 'index.html', *sorted((root / 'extensions').rglob('*.html'))]
+          for page in pages:
+              Assets(page).feed(page.read_text())
+          print(f'{len(pages)} pages and their referenced files verified')
           PY
 
-      # FTP credentials are rooted at pref.tools/. Only index.html and img/ are
+      # FTP credentials are rooted at pref.tools/. Only index.html, img/ and extensions/ are
       # published; the other tools living in subfolders are never touched.
       # The first publish can fail with ECONNRESET while the sync state file is
       # missing; re-running the job fixes that.
@@ -87,7 +97,7 @@ jobs:
           curl --fail --silent --show-error --location --retry 3 --max-time 60 \
             "https://pref.tools/?revision=${GITHUB_SHA}" --output "$RUNNER_TEMP/site-check"
           cmp index.html "$RUNNER_TEMP/site-check"
-          for file in img/*; do
+          for file in $(find img extensions -type f | sort); do
             curl --fail --silent --show-error --location --retry 3 --max-time 60 \
               "https://pref.tools/$file?revision=${GITHUB_SHA}" --output "$RUNNER_TEMP/site-check"
             cmp "$file" "$RUNNER_TEMP/site-check"

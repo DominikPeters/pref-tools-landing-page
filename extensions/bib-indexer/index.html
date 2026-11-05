@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bib Indexer for VS Code | Pref.Tools</title>
+    <meta name="description" content="Search and merge BibTeX entries across all your .bib files from a Visual Studio Code sidebar: what it does, how to install and use it.">
+    <link rel="icon" href="/favicon.ico">
+    <link rel="stylesheet" href="../style.css">
+</head>
+
+<body>
+    <header>
+        <div class="bar">
+            <a href="/">Pref.Tools</a>
+            <span class="sep">&rsaquo;</span>
+            <a href="/extensions/">VS Code extensions</a><span class="sep">&rsaquo;</span> Bib Indexer
+        </div>
+    </header>
+    <main>
+        <div class="ext-header">
+            <img src="../img/bib-indexer-logo.png" alt="" width="96" height="96">
+            <div>
+                <h1>Bib Indexer</h1>
+                <p class="meta">Extension for Visual Studio Code &middot; version 0.2.0 &middot; Marketplace ID <code>DominikPeters.bib-indexer</code></p>
+            </div>
+        </div>
+        <p class="lead">A sidebar for researchers who keep separate <code>.bib</code> files for different projects. Bib Indexer scans the bibliography files on your computer into one searchable index. While you edit an entry, it shows matching entries from your other files and lets you merge missing fields with one click.</p>
+        <p class="actions">
+            <a class="button" href="https://marketplace.visualstudio.com/items?itemName=DominikPeters.bib-indexer">Install from the VS Code Marketplace</a>
+            <a class="button secondary" href="https://github.com/DominikPeters/bib-indexer">Source code on GitHub</a>
+            <a class="button secondary" href="https://github.com/DominikPeters/bib-indexer/issues">Report an issue</a>
+        </p>
+        <p>Example: you are editing a BibTeX entry that is missing page numbers, and another <code>.bib</code> file on your computer has a more complete entry for the same paper. Bib Indexer finds it, shows it in the sidebar, and a click copies the missing fields into your entry.</p>
+        <p><img class="shot " src="../img/bib-indexer-merge.gif" alt="Bib Indexer sidebar showing a matching entry and inserting missing fields into the current entry" loading="lazy"></p>
+        <h2>What it does</h2>
+        <h3>Search across all your bibliographies</h3>
+        <p>Full-text search over every indexed file. Quoted phrases match exactly, multi-term queries are supported, and results are ranked by relevance and grouped by paper so that different versions of the same entry appear together.</p>
+        <p><img class="shot " src="../img/bib-indexer-search.gif" alt="Searching all indexed bibliography files from the sidebar" loading="lazy"></p>
+        <h3>Duplicate detection and field comparison</h3>
+        <p>With the cursor on a BibTeX entry, the sidebar lists matching entries from other files, found by DOI or by fuzzy title and author similarity. Each match highlights new fields (green), differing values (with an inline diff) and identical fields.</p>
+        <p><img class="shot " src="../img/bib-indexer-diff.png" alt="Match cards in the Bib Indexer sidebar next to the BibTeX source" loading="lazy"></p>
+        <h3>Merging and inserting</h3>
+        <p>When the same paper appears in several files, compatible entries (same BibTeX type, no conflicting values) are merged into one card with the union of their fields. <strong>Copy entry</strong> puts the BibTeX on the clipboard, <strong>Insert entry</strong> adds it to the current file, and <strong>Insert field</strong> adds one missing field, respecting indentation and field order.</p>
+        <h3>File management</h3>
+        <p>Add folders or single <code>.bib</code> files to the index from the sidebar. The extension watches for changes and reindexes only the files that were modified.</p>
+        <p><img class="shot small" src="../img/bib-indexer-files.png" alt="The Manage Files view of Bib Indexer listing indexed folders" loading="lazy"></p>
+        <h2>How to use it</h2>
+        <ol>
+            <li>Install the extension and open a workspace that contains <code>.bib</code> files.</li>
+            <li>Click the <strong>Bib Indexer</strong> icon in the activity bar.</li>
+            <li>Use <strong>Manage files</strong> to add the folders or files to scan.</li>
+            <li>Put the cursor on a BibTeX entry to see matches, or type in the search box to find entries in all files.</li>
+        </ol>
+
+        <h2>Commands</h2>
+        <p>Available from the Command Palette: <strong>Bib Indexer: Add Folder to Index</strong>, <strong>Bib Indexer: Remove Folder from Index</strong> and <strong>Bib Indexer: Reindex All Files</strong>.</p>
+
+        <h2>Settings</h2>
+        <table>
+            <tr><th>Setting</th><th>Default</th><th>Purpose</th></tr>
+            <tr><td><code>bibIndexer.indexedFolders</code></td><td><code>[]</code></td><td>Folders scanned recursively for <code>.bib</code> files</td></tr>
+            <tr><td><code>bibIndexer.similarityThreshold</code></td><td><code>0.85</code></td><td>Minimum similarity (0 to 1) for fuzzy matches</td></tr>
+            <tr><td><code>bibIndexer.ignoredFields</code></td><td><code>["keywords", "abstract", &hellip;]</code></td><td>Fields skipped when parsing; wildcards such as <code>bdsk-file-*</code> are allowed</td></tr>
+        </table>
+
+        <h2>Privacy, license and source</h2>
+        <p>The index is built and stored locally from the files you choose; nothing is uploaded. The extension is MIT licensed, and the <a href="https://github.com/DominikPeters/bib-indexer">source code</a> and issue tracker are on GitHub.</p>
+    </main>
+    <footer>
+        <p>
+            Visual Studio Code extensions by Dominik Peters, published under the Marketplace publisher
+            <a href="https://marketplace.visualstudio.com/publishers/DominikPeters">DominikPeters</a>.
+            &middot; <a href="https://github.com/DominikPeters/pref-tools-landing-page">source of this site</a>
+        </p>
+    </footer>
+</body>
+
+</html>

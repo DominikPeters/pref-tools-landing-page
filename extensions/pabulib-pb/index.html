@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Pabulib (.pb) for VS Code | Pref.Tools</title>
+    <meta name="description" content="Syntax highlighting, validation and completions for Pabulib .pb participatory budgeting files in Visual Studio Code.">
+    <link rel="icon" href="/favicon.ico">
+    <link rel="stylesheet" href="../style.css">
+</head>
+
+<body>
+    <header>
+        <div class="bar">
+            <a href="/">Pref.Tools</a>
+            <span class="sep">&rsaquo;</span>
+            <a href="/extensions/">VS Code extensions</a><span class="sep">&rsaquo;</span> Pabulib (.pb)
+        </div>
+    </header>
+    <main>
+        <div class="ext-header">
+            <img src="../img/pabulib-pb-logo.png" alt="" width="96" height="96">
+            <div>
+                <h1>Pabulib (.pb)</h1>
+                <p class="meta">Extension for Visual Studio Code &middot; version 1.1.0 &middot; Marketplace ID <code>DominikPeters.pabulib-pb</code></p>
+            </div>
+        </div>
+        <p class="lead">Language support for the <code>.pb</code> file format used by <a href="http://pabulib.org/">Pabulib</a>, the library of participatory budgeting elections: syntax highlighting, validation, completions, hover information, navigation and quick fixes.</p>
+        <p class="actions">
+            <a class="button" href="https://marketplace.visualstudio.com/items?itemName=DominikPeters.pabulib-pb">Install from the VS Code Marketplace</a>
+            <a class="button secondary" href="https://github.com/DominikPeters/pb-vscode">Source code on GitHub</a>
+            <a class="button secondary" href="https://github.com/DominikPeters/pb-vscode/issues">Report an issue</a>
+        </p>
+        <p><img class="shot " src="../img/pabulib-pb-syntax.png" alt="A .pb file with syntax highlighting for META, PROJECTS and VOTES" loading="lazy"></p>
+        <h2>The .pb format</h2>
+        <p>A <code>.pb</code> file stores a participatory budgeting election in three semicolon-separated sections: <code>META</code> (description, budget, vote type and so on), <code>PROJECTS</code> (ids, costs, names, categories) and <code>VOTES</code> (what each voter selected). The full specification is on <a href="http://pabulib.org/">pabulib.org</a>.</p>
+        <pre>META
+key;value
+description;Municipal PB in Example City
+num_projects;3
+num_votes;5
+budget;100000
+vote_type;approval
+
+PROJECTS
+project_id;cost;name;category
+1;30000;New Park;environment
+2;50000;Road Repair;infrastructure
+3;25000;Library Books;education
+
+VOTES
+voter_id;vote
+v1;1,2
+v2;2,3</pre>
+
+        <h2>What it does</h2>
+        <h3>Validation</h3>
+        <p>Diagnostics appear as you type. The extension checks, among other things, for missing required META fields, wrong value types, <code>num_projects</code> and <code>num_votes</code> that disagree with the data, invalid vote types, rules and dates, duplicate or unknown project ids, votes that violate length or point limits, and projects that cost more than the total budget.</p>
+        <p><img class="shot " src="../img/pabulib-pb-correction.png" alt="A diagnostic reporting that num_votes does not match the number of votes, with a quick fix" loading="lazy"></p>
+        <h3>Completions</h3>
+        <p>Suggestions for META field names (with descriptions), valid values for <code>vote_type</code> and <code>rule</code>, project ids when entering votes, and categories and targets already used in the file.</p>
+        <p><img class="shot small" src="../img/pabulib-pb-autocomplete.png" alt="Completion list for the vote_type value" loading="lazy"></p>
+        <h3>Hover information</h3>
+        <p>Hover over a META key to see its description and valid values, over the budget to see what share of the total project cost it covers, over a category to see the other projects in it, and over a project id in a vote to see its name, cost, categories and vote count.</p>
+        <p><img class="shot " src="../img/pabulib-pb-hover-category.png" alt="Hover showing other projects that share a category" loading="lazy"></p>
+        <h3>Navigation and quick fixes</h3>
+        <ul>
+            <li><strong>Go to Definition</strong> (Ctrl/Cmd-click) jumps from a project id in a vote to its definition; <strong>Find All References</strong> lists the votes for a project; <strong>Rename Symbol</strong> (F2) renames a project id across the file.</li>
+            <li><strong>Quick fixes</strong> (lightbulb or Ctrl/Cmd+.) update <code>num_projects</code> or <code>num_votes</code> to the real counts, add missing META fields, and sort projects by votes, cost or id.</li>
+            <li>The <strong>Outline</strong> panel shows the three sections with summary statistics, and each section can be folded separately.</li>
+        </ul>
+        <p><img class="shot small" src="../img/pabulib-pb-folding.png" alt="Folded META, PROJECTS and VOTES sections" loading="lazy"></p>
+        <h2>How to use it</h2>
+        <p>Install the extension and open any file with the <code>.pb</code> extension; highlighting and checks start automatically and there is nothing to configure.</p>
+
+        <h2>Privacy, license and source</h2>
+        <p>The extension works on the open file only and does not send data anywhere. It is MIT licensed; the <a href="https://github.com/DominikPeters/pb-vscode">source code</a> and issue tracker are on GitHub.</p>
+    </main>
+    <footer>
+        <p>
+            Visual Studio Code extensions by Dominik Peters, published under the Marketplace publisher
+            <a href="https://marketplace.visualstudio.com/publishers/DominikPeters">DominikPeters</a>.
+            &middot; <a href="https://github.com/DominikPeters/pref-tools-landing-page">source of this site</a>
+        </p>
+    </footer>
+</body>
+
+</html>

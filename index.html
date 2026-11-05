@@ -55,6 +55,15 @@
             text-align: left;
         }
 
+        .section-note {
+            margin: -0.3rem 0 0.9rem;
+            text-align: left;
+        }
+
+        .section-note a {
+            color: white;
+        }
+
         .grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
@@ -191,20 +200,27 @@
                 <span class="name">TeXstudio Espresso</span>
                 <span class="desc">TeXstudio fork with a live preview based on TeXpresso</span>
             </a>
-            <a class="card" href="https://marketplace.visualstudio.com/items?itemName=DominikPeters.texpresso-basic">
+            </div>
+        </section>
+
+        <section>
+            <h3>VS Code extensions</h3>
+            <p class="section-note">Extensions for Visual Studio Code, published on the Marketplace as <a href="https://marketplace.visualstudio.com/publishers/DominikPeters">DominikPeters</a>. Each page explains what the extension does and how to use it.</p>
+            <div class="grid">
+            <a class="card" href="/extensions/texpresso/">
                 <img src="img/texpresso.webp" width="640" height="400" alt="" loading="lazy">
-                <span class="name">TeXpresso for VS Code</span>
-                <span class="desc">Live LaTeX preview in VS Code with SyncTeX</span>
+                <span class="name">TeXpresso</span>
+                <span class="desc">Live LaTeX preview beside your source, with SyncTeX in both directions</span>
             </a>
-            <a class="card" href="https://marketplace.visualstudio.com/items?itemName=DominikPeters.bib-indexer">
+            <a class="card" href="/extensions/bib-indexer/">
                 <img src="img/bib-indexer.webp" width="640" height="400" alt="" loading="lazy">
                 <span class="name">Bib Indexer</span>
-                <span class="desc">VS Code extension to search and merge BibTeX entries across files</span>
+                <span class="desc">Search all your .bib files and merge matching entries from a sidebar</span>
             </a>
-            <a class="card" href="https://marketplace.visualstudio.com/items?itemName=DominikPeters.pabulib-pb">
+            <a class="card" href="/extensions/pabulib-pb/">
                 <img src="img/pabulib-pb.webp" width="640" height="400" alt="" loading="lazy">
                 <span class="name">Pabulib (.pb)</span>
-                <span class="desc">VS Code language support for the Pabulib participatory budgeting format</span>
+                <span class="desc">Highlighting, validation and completions for participatory budgeting files</span>
             </a>
             </div>
         </section>

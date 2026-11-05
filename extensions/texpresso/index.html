@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>TeXpresso for VS Code | Pref.Tools</title>
+    <meta name="description" content="Live LaTeX preview in Visual Studio Code with bidirectional SyncTeX: what it does, how to install and use it.">
+    <link rel="icon" href="/favicon.ico">
+    <link rel="stylesheet" href="../style.css">
+</head>
+
+<body>
+    <header>
+        <div class="bar">
+            <a href="/">Pref.Tools</a>
+            <span class="sep">&rsaquo;</span>
+            <a href="/extensions/">VS Code extensions</a><span class="sep">&rsaquo;</span> TeXpresso
+        </div>
+    </header>
+    <main>
+        <div class="ext-header">
+            <img src="../img/texpresso-logo.png" alt="" width="96" height="96">
+            <div>
+                <h1>TeXpresso</h1>
+                <p class="meta">Extension for Visual Studio Code &middot; version 2.0.0 &middot; Marketplace ID <code>DominikPeters.texpresso-basic</code></p>
+            </div>
+        </div>
+        <p class="lead">Edit LaTeX with a live preview beside your source. The preview updates as you type, and you can jump between source and PDF in both directions with SyncTeX. It can be used alongside other LaTeX extensions such as LaTeX Workshop.</p>
+        <p class="actions">
+            <a class="button" href="https://marketplace.visualstudio.com/items?itemName=DominikPeters.texpresso-basic">Install from the VS Code Marketplace</a>
+            <a class="button secondary" href="https://github.com/DominikPeters/texpresso-vscode">Source code on GitHub</a>
+            <a class="button secondary" href="https://github.com/DominikPeters/texpresso-vscode/issues">Report an issue</a>
+        </p>
+        <p><img class="shot " src="../img/texpresso-demo.gif" alt="TeXpresso preview beside a LaTeX source file, updating as the source is edited" loading="lazy"></p>
+        <h2>What it does</h2>
+        <ul>
+            <li><strong>Live rendering.</strong> The preview updates immediately as you edit, without a manual recompile.</li>
+            <li><strong>Bidirectional SyncTeX.</strong> Jump from the cursor to the matching place in the preview, or Control/Command-click in the preview to jump to the source line.</li>
+            <li><strong>Multi-file projects.</strong> Files pulled in with <code>\input</code> are tracked and changes are passed on to the engine.</li>
+            <li><strong>Theme matching.</strong> Optionally render the preview with your editor's color theme.</li>
+            <li><strong>Windows via WSL.</strong> The engine runs in the Windows Subsystem for Linux while the preview appears in VS Code on Windows.</li>
+        </ul>
+
+        <h2>How to use it</h2>
+        <ol>
+            <li>Install the extension, and a TeX package provider such as TeX Live or Tectonic, on the machine where the extension runs. For Tectonic, select it in the setting <code>texpresso.packageProvider</code>.</li>
+            <li>Open a LaTeX document in VS Code.</li>
+            <li>Open the Command Palette and run <strong>TeXpresso: Start Document</strong>. The preview opens beside your source and updates as you edit.</li>
+        </ol>
+        <p>The macOS and Linux packages include the TeXpresso engine. The universal package needs a <a href="https://github.com/let-def/texpresso/blob/main/INSTALL.md">separately installed engine</a>. Leave <code>texpresso.command</code> empty to use the bundled engine, or set it to your own executable.</p>
+        <p>For projects with several files, add a <code>% !TeX root = ../main.tex</code> comment or run <strong>TeXpresso: Select Main Document</strong>; the choice is remembered per workspace folder.</p>
+
+        <h2>Preview controls</h2>
+        <p>The preview toolbar navigates pages, adjusts zoom and fit, pauses or restarts compilation and opens the compiler output. Pinch or Control/Command-scroll zooms. Hyperlinks in the document are clickable. The magnifier button (or <kbd>M</kbd> while the preview has focus) turns on a loupe. The status-bar entry opens controls for starting, stopping, restarting and pausing the preview, running extra compilation passes and opening logs. <strong>External Compile and Refresh</strong> runs an external build, for example to run a bibliography program.</p>
+
+        <h2>Windows</h2>
+        <p>Open your project in a <a href="https://code.visualstudio.com/docs/remote/wsl">WSL</a> window with <strong>TeXpresso: Reopen Folder in WSL</strong>, install the extension in that window and install TeX Live or Tectonic in the Linux distribution. Alternatively, enable <code>texpresso.useWSL</code> from a local Windows window to use an engine installed in WSL.</p>
+
+        <h2>Common settings</h2>
+        <table>
+            <tr><th>Setting</th><th>Purpose</th></tr>
+            <tr><td><code>texpresso.command</code></td><td>Use an external engine instead of the bundled one</td></tr>
+            <tr><td><code>texpresso.previewLocation</code></td><td>Show the preview in the editor area or in a separate window</td></tr>
+            <tr><td><code>texpresso.packageProvider</code></td><td>TeX Live (default) or Tectonic</td></tr>
+            <tr><td><code>texpresso.includeDirectories</code></td><td>Extra directories for project inputs</td></tr>
+            <tr><td><code>texpresso.autoRerun</code></td><td>Extra passes for references and the table of contents when editing pauses</td></tr>
+            <tr><td><code>texpresso.syncTeXForwardOnSelection</code></td><td>Follow the source cursor in the preview</td></tr>
+            <tr><td><code>texpresso.useEditorTheme</code></td><td>Use the editor's colors in the preview</td></tr>
+        </table>
+
+        <h2>Troubleshooting</h2>
+        <p>Run <strong>TeXpresso: Check Setup</strong> to inspect the selected engine and package provider. If compilation fails, open the <em>TeXpresso</em> and <em>TeXpresso Log</em> output channels, and check that the required LaTeX packages are installed where the extension runs (inside WSL if applicable).</p>
+
+        <h2>Privacy, license and source</h2>
+        <p>The extension runs locally, compiles your documents on your machine and sends no data to any server. Its own code is MIT licensed; the platform packages also contain native components under other licenses, listed in the <a href="https://github.com/DominikPeters/texpresso-vscode/blob/HEAD/THIRD-PARTY-NOTICES.txt">third-party notices</a>. The <a href="https://github.com/DominikPeters/texpresso-vscode/blob/HEAD/CHANGELOG.md">changelog</a> lists changes between versions.</p>
+    </main>
+    <footer>
+        <p>
+            Visual Studio Code extensions by Dominik Peters, published under the Marketplace publisher
+            <a href="https://marketplace.visualstudio.com/publishers/DominikPeters">DominikPeters</a>.
+            &middot; <a href="https://github.com/DominikPeters/pref-tools-landing-page">source of this site</a>
+        </p>
+    </footer>
+</body>
+
+</html>
