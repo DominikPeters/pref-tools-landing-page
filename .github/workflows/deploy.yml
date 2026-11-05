@@ -58,27 +58,28 @@ jobs:
 
       # FTP credentials are rooted at pref.tools/. Only index.html and img/ are
       # published; the other tools living in subfolders are never touched.
-      # curl is used instead of an FTP action because the host resets the
-      # connection when such actions create directories. Images go first, so
-      # the page never references a missing file. Nothing is deleted.
-      - name: Upload website via FTPS
+      # The first publish can fail with ECONNRESET while the sync state file is
+      # missing; re-running the job fixes that.
+      - name: Upload website via FTP
         if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
-        env:
-          FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
-          FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
-          DRY_RUN: ${{ inputs.dry_run == true }}
-        run: |
-          set -euo pipefail
-          for file in img/* index.html; do
-            if [ "$DRY_RUN" = true ]; then
-              echo "would upload $file"
-              continue
-            fi
-            echo "uploading $file"
-            curl --fail --silent --show-error --ssl-reqd --retry 3 --max-time 120 \
-              --user "$FTP_USERNAME:$FTP_PASSWORD" --ftp-create-dirs \
-              -T "$file" "ftp://w008ef9a.kasserver.com/$file"
-          done
+        uses: SamKirkland/FTP-Deploy-Action@3a9c65ae0fc12ac924ccef8afc26941cc43aad0b # v4.4.0
+        with:
+          server: w008ef9a.kasserver.com
+          port: 21
+          protocol: ftp
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./
+          server-dir: ./
+          state-name: .ftp-deploy-sync-state-landing.json
+          dangerous-clean-slate: false
+          dry-run: ${{ inputs.dry_run == true }}
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/.DS_Store
+            README.md
+            .github/**
 
       - name: Verify published files over HTTPS
         if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && inputs.dry_run != true
