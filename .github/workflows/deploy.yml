@@ -1,0 +1,93 @@
+name: Deploy website
+
+on:
+  push:
+    branches: [main]
+    paths: ['index.html', 'img/**', '.github/workflows/deploy.yml']
+  pull_request:
+    paths: ['index.html', 'img/**', '.github/workflows/deploy.yml']
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: Preview FTP changes without uploading
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: website-${{ github.event_name == 'pull_request' && github.ref || 'production' }}
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Publish pref.tools landing page
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Validate static page and local assets
+        run: |
+          python3 - <<'PY'
+          from html.parser import HTMLParser
+          from pathlib import Path
+          from urllib.parse import urlsplit
+
+          root = Path('.').resolve()
+          html = (root / 'index.html').read_text()
+
+          class Assets(HTMLParser):
+              def handle_starttag(self, tag, attrs):
+                  for key, value in attrs:
+                      if key not in ('src', 'srcset') or not value:
+                          continue
+                      for ref in (part.strip().split()[0] for part in value.split(',')):
+                          url = urlsplit(ref)
+                          if url.scheme or url.netloc or not url.path:
+                              continue
+                          asset = (root / url.path).resolve()
+                          assert asset.is_relative_to(root) and asset.is_file(), f'Missing asset: {ref}'
+
+          Assets().feed(html)
+          print('Static page and referenced images verified')
+          PY
+
+      # FTP credentials are rooted at pref.tools/. Only index.html and img/ are
+      # published; the other tools living in subfolders are never touched.
+      - name: Upload website via FTP
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+        uses: SamKirkland/FTP-Deploy-Action@3a9c65ae0fc12ac924ccef8afc26941cc43aad0b # v4.4.0
+        with:
+          server: w008ef9a.kasserver.com
+          port: 21
+          protocol: ftp
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./
+          server-dir: ./
+          state-name: .ftp-deploy-sync-state-landing.json
+          dangerous-clean-slate: false
+          dry-run: ${{ inputs.dry_run == true }}
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/.DS_Store
+            README.md
+            .github/**
+
+      - name: Verify published files over HTTPS
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && inputs.dry_run != true
+        run: |
+          curl --fail --silent --show-error --location --retry 3 --max-time 60 \
+            "https://pref.tools/?revision=${GITHUB_SHA}" --output "$RUNNER_TEMP/site-check"
+          cmp index.html "$RUNNER_TEMP/site-check"
+          for file in img/*; do
+            curl --fail --silent --show-error --location --retry 3 --max-time 60 \
+              "https://pref.tools/$file?revision=${GITHUB_SHA}" --output "$RUNNER_TEMP/site-check"
+            cmp "$file" "$RUNNER_TEMP/site-check"
+          done
+          echo "Published page and image bytes match this commit."
