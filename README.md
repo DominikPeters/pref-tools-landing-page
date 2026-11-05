@@ -6,4 +6,4 @@ deployed from its own repository.
 
 A push to `main` that touches the page or images publishes it over FTP
 (`.github/workflows/deploy.yml`, secrets `FTP_USERNAME` and `FTP_PASSWORD`).
-Run the workflow manually with "dry run" ticked to preview the changes.
+Files are uploaded with curl over FTP with TLS; nothing is deleted on the server. Run the workflow manually with "dry run" ticked to preview the changes.
